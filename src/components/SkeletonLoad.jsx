@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import Typography from '@mui/material/Typography';
 import Skeleton from '@mui/material/Skeleton';
@@ -8,24 +9,37 @@ import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
 function Media() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [post, setPost] = useState([]);
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const search = location.search.slice(6);
+
+  const getData = useCallback((pages) => {
     setLoading(true);
     fetch(
-      `https://jsonplaceholder.typicode.com/photos?_page=${page}&_limit=15}`
+      `https://jsonplaceholder.typicode.com/photos?_page=${pages}&_limit=15}`
     )
       .then((res) => res.json())
       .then((data) => {
         setPost(data);
         setLoading(false);
       });
-  }, [page]);
+  }, []);
+
+  useEffect(() => {
+    const searchPage = search ? Number(search) : 1;
+    setPage(searchPage);
+
+    getData(searchPage);
+  }, [search, getData]);
 
   const handlePagination = (event, newPage) => {
-    setPage(newPage);
+    //setPage(newPage);
+
+    navigate(`?page=${newPage}`);
   };
 
   return (

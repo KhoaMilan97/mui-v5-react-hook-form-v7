@@ -5,8 +5,6 @@ import Checkbox from '@mui/material/Checkbox';
 import FormHelperText from '@mui/material/FormHelperText';
 
 function CheckBoxContainer({ name, control, label, errors }) {
-  console.log(errors);
-
   return (
     <>
       <FormControlLabel
